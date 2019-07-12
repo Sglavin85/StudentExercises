@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace StudentExercises
 {
@@ -24,6 +25,7 @@ namespace StudentExercises
             var deepP = new Student("Deep", "Patel", "DeepThoughts");
             var seanG = new Student("Sean", "Glavin", "SGlav");
             var joelV = new Student("Joel", "Venable", "JVrook");
+            var nateF = new Student("Nathan", "Flemming", "NateF");
 
             //instructors
             var brenda = new Instructor("Brenda", "Long", "Blong", "Making Tacos");
@@ -35,6 +37,7 @@ namespace StudentExercises
             n08.AddStudent(deepP);
             d32.AddStudent(seanG);
             d33.AddStudent(joelV);
+            n08.AddStudent(nateF);
 
             d32.AddInstructor(brenda);
             n08.AddInstructor(bryan);
@@ -44,6 +47,7 @@ namespace StudentExercises
             brenda.AssignExercise(arrays, seanG);
             brenda.AssignExercise(objects, joeyD);
             brenda.AssignExercise(dictionaries, seanG);
+            brenda.AssignExercise(classes, seanG);
 
             bryan.AssignExercise(objects, deepP);
             bryan.AssignExercise(arrays, deepP);
@@ -54,19 +58,108 @@ namespace StudentExercises
             adam.AssignExercise(arrays, danS);
             adam.AssignExercise(classes, danS);
 
-            var allStudents = new List<Student>();
-            allStudents.Add(joeyD);
-            allStudents.Add(joelV);
-            allStudents.Add(deepP);
-            allStudents.Add(seanG);
-            allStudents.Add(danS);
+            var allStudents = new List<Student>()
+           {
+                joeyD,
+                joelV,
+                deepP,
+                seanG,
+                danS,
+                nateF
+            };
 
-            var allExercises = new List<Exercise>();
-            allExercises.Add(classes);
-            allExercises.Add(dictionaries);
-            allExercises.Add(arrays);
-            allExercises.Add(objects);
+            var allExercises = new List<Exercise>()
+            {
+                classes,
+                dictionaries,
+                arrays,
+                objects
+            };
+            var allInstructors = new List<Instructor>()
+            {
+                brenda,
+                bryan,
+                adam
+            };
+            var allCohorts = new List<Cohort>()
+            {
+                d32,
+                d33,
+                n08
+            };
 
+            //List all JS exercises
+            var JavascriptExercises = allExercises.Where(exercise => exercise.language == "Javascript");
+
+            System.Console.WriteLine("Javascript Exercises:");
+            foreach (var ex in JavascriptExercises)
+            {
+                System.Console.WriteLine(ex.name);
+            }
+
+            // List all students in Cohort 32
+            var Cohort32Students = allCohorts.Where(cohort => cohort.name == "Day Cohort 32")
+            .SelectMany(cohort => cohort.students);
+
+            System.Console.WriteLine("");
+            System.Console.WriteLine("Cohort 32 Students:");
+            foreach (var student in Cohort32Students)
+            {
+                System.Console.WriteLine(student.firstName + " " + student.lastName);
+            }
+
+            //List all instructors in Cohort 33
+            var Cohort33Instructors = allCohorts.Where(cohort => cohort.name == "Day Cohort 33")
+            .SelectMany(cohort => cohort.instructors);
+
+            System.Console.WriteLine("");
+            System.Console.WriteLine("Cohort 32 Students:");
+            foreach (var instructor in Cohort33Instructors)
+            {
+                System.Console.WriteLine(instructor.firstName + " " + instructor.lastName);
+            }
+
+            //Sort students by last name
+            var studentsByLastName = allStudents.OrderBy(student => student.lastName);
+
+            System.Console.WriteLine("");
+            System.Console.WriteLine("Students by last name:");
+
+            foreach (var student in studentsByLastName)
+            {
+                System.Console.WriteLine(student.lastName + ", " + student.firstName);
+            }
+
+            //Find Students with no assigned Exercises
+            var studentsWithNoExercises = allStudents.Where(student => student.exercises.Count() == 0);
+
+            System.Console.WriteLine("");
+            System.Console.WriteLine("Students with no assigned Exercises:");
+            foreach (var student in studentsWithNoExercises)
+            {
+                System.Console.WriteLine(student.firstName + " " + student.lastName);
+            }
+
+            //List the student with the most exercises assigned
+            var studentWithMostAssignedExercises = allStudents.OrderBy(student => student.exercises.Count()).Take(1);
+
+            System.Console.WriteLine("");
+            System.Console.WriteLine("Student with the most exercises assigned");
+            foreach (Student student in studentWithMostAssignedExercises)
+            {
+                System.Console.WriteLine(student.firstName + " " + student.lastName);
+            }
+
+            //Number of students in each cohort
+            System.Console.WriteLine("");
+            System.Console.WriteLine("Number of students in each cohort");
+
+            foreach (var cohort in allCohorts)
+            {
+                System.Console.WriteLine(cohort.name + ": " + cohort.students.Count());
+            }
+            //List what exercises students are working on
+            System.Console.WriteLine("");
             foreach (Student student in allStudents)
             {
                 System.Console.WriteLine($"{student.firstName} {student.lastName} is working on the following exercises");
